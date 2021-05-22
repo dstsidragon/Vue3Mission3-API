@@ -1,3 +1,5 @@
+
+
 const app = Vue.createApp({
     data() {
         return {
@@ -17,6 +19,27 @@ const app = Vue.createApp({
             userName: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
             //取得token
             token: document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
+            // 編輯資料索引
+            rediData:{
+                redi_index:null,
+                id:"",
+                title: "",
+                description: "",
+                content: "",
+                category: null,
+                unit: "",
+                origin_price: null,
+                price: null,
+                is_enabled: 0,
+                num: 1,
+                imageUrl : "",
+                imagesUrl: {
+                   url1: "",
+                   url2: "",
+                   url3: "",
+                   url4: "",
+                   url5: ""}
+                },
         }
     },
     methods: {
@@ -41,12 +64,13 @@ const app = Vue.createApp({
             axios.get(`${api_url}/api/${api_path}/admin/products`)
                 .then(
                     res => {
-                        console.log(res);
+                        // console.log(res);
                         // console.log(res.data.success);
                         if (res.data.success) {
                             this.productData = res.data.products;
                             // console.log(productData);
-                            this.render();
+                            // 更新筆數
+                            this.dataLength = this.productData.length;
                         } else {
                             alert(res.data.message);
                             // window.location="index.html";
@@ -57,52 +81,6 @@ const app = Vue.createApp({
                         console.log(err);
                     }
                 )
-        },
-
-        //呈現資料在畫面
-        render() {
-            const productList = document.getElementById("productList");
-            let str = "";
-            this.dataLength = this.productData.length;
-
-            this.productData.forEach((item, i) => {
-                str += `
-        <tr class="row ">
-        
-        <td  class="col-3 d-none d-md-table-cell d-flex align-items-center"><img width="100%"  src="${item.imageUrl}" alt=""></td>
-          <td class="col-2 d-flex align-items-center">${item.title}</td>
-          <td  class="col-2 d-flex align-items-center">
-            ${item.origin_price}
-          </td>
-          <td class="col-2 d-flex align-items-center">
-            ${item.price}
-          </td>
-          <td  class="col-2 d-flex align-items-center">
-          <div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch_${item.id}" tabindex="0" ${item.is_enabled == 1 ? "checked" : ""} data-is_enabled="${item.is_enabled}" data-id="${item.id}" data-title="${item.title}" data-category="${item.category}" data-unit="${item.unit}" data-origin_price="${item.origin_price}" data-price="${item.price}">
-    <label class="onoffswitch-label" for="myonoffswitch_${item.id}"></label>
-</div>
-          </td>
-          <td class="col-1 d-flex align-items-center">
-            <button type="button" id="del_${item.id}" class="btn btn-sm btn-outline-danger move deleteBtn" data-action="remove" data-id="${item.id}"> 刪除 </button>
-          </td>
-        </tr>
-      `;
-            });
-            productList.innerHTML = str;
-            //賦予事件
-            this.addEvent();
-        },
-
-        //動態賦予事件
-        addEvent() {
-            this.productData.forEach((item, i) => {
-                // 刪除事件
-                document.getElementById(`del_${item.id}`).addEventListener("click", this.delOneData, false);
-                //啟用/未啟用
-                document.getElementById(`myonoffswitch_${item.id}`).addEventListener("click", this.productEnable, false);
-            })
-
         },
 
         //刪除單一資料
@@ -139,11 +117,28 @@ const app = Vue.createApp({
             axios.put(`${api_url}/api/${api_path}/admin/product/${delId}`, {
                 "data": {
                     "category": `${e.target.dataset.category}`,
-                    "is_enabled": `${e.target.dataset.is_enabled == 1 ? "0" : "1"}`,
+                    "is_enabled": e.target.dataset.is_enabled == 1 ? 0 : 1,
                     "origin_price": parseInt(e.target.dataset.origin_price),
                     "price": parseInt(e.target.dataset.price),
                     "title": `${e.target.dataset.title}`,
                     "unit": `${e.target.dataset.unit}`,
+
+                    // "title": bg_add_title.value,
+                    // "category": bg_add_category.value,
+                    // "origin_price": parseInt(bg_add_origin_price.value),
+                    // "price": parseInt(bg_add_price.value),
+                    // "unit": bg_add_unit.value,
+                    // "description": bg_add_description.value,
+                    // "content": bg_add_content.value,
+                    // "is_enabled": (bg_add_is_enabled.value == "on" ? "1" : "0"),
+                    // "imageUrl": bg_add_image.value,
+                    // "imagesUrl": [
+                    //     bg_add_image1.value,
+                    //     bg_add_image2.value,
+                    //     bg_add_image3.value,
+                    //     bg_add_image4.value,
+                    //     bg_add_image5.value
+                    // ]
                 }
             })
                 .then(
@@ -159,12 +154,8 @@ const app = Vue.createApp({
                 )
         },
 
-
-
-
         //建立產品
-
-        addPrductData() {
+         addPrductData() {
             const bg_add_title = document.getElementById("bg_add_title");
             const bg_add_description = document.getElementById("bg_add_description");
             const bg_add_content = document.getElementById("bg_add_content");
@@ -179,6 +170,7 @@ const app = Vue.createApp({
             const bg_add_image4 = document.getElementById("bg_add_image4");
             const bg_add_image5 = document.getElementById("bg_add_image5");
             const bg_add_is_enabled = document.getElementById("bg_add_is_enabled");
+            
             const product = {
                 "data": {
                     "title": bg_add_title.value,
@@ -188,7 +180,7 @@ const app = Vue.createApp({
                     "unit": bg_add_unit.value,
                     "description": bg_add_description.value,
                     "content": bg_add_content.value,
-                    "is_enabled": (bg_add_is_enabled.value == "on" ? "2" : "1"),
+                    "is_enabled": (bg_add_is_enabled.checked  ? 1 :0),
                     "imageUrl": bg_add_image.value,
                     "imagesUrl": [
                         bg_add_image1.value,
@@ -199,8 +191,6 @@ const app = Vue.createApp({
                     ]
                 }
             };
-            console.log(typeof bg_add_price.value);
-            console.log(typeof bg_add_origin_price.value);
             if (bg_add_title.value !== "" && bg_add_category.value !== ""
                 && bg_add_unit.value !== "" && bg_add_origin_price.value !== ""
                 && bg_add_price.value !== "") {
@@ -208,9 +198,24 @@ const app = Vue.createApp({
                 axios.post(`${api_url}/api/${api_path}/admin/product`, product)
                     .then(
                         res => {
-                            console.log(res.data.message);
+                            alert(res.data.message);
                             // 刷新
                             this.getProduct();
+
+                            // 關掉新增產品選單
+                            
+                            document.getElementById("addProduct").classList.remove("show")
+
+                            // 清空資料
+                            bg_add_title.value = "";
+                            bg_add_category.value = "";
+                            bg_add_origin_price.value = "";
+                            bg_add_price.value = "";
+                            bg_add_unit.value = "";
+                            bg_add_description.value = "";
+                            bg_add_content.value = "";
+                            bg_add_is_enabled.checked="false";
+
                         }
                     )
                     .catch(
@@ -223,15 +228,73 @@ const app = Vue.createApp({
                 alert("標題、分類、單位、原價、售價為必填欄位!");
             }
         },
+        // 取得編輯商品
+        getReditOneData(e){
+            // 取得待編輯商品索引
+            const index = (e.target.id).split("_")[1];
+            // 將索引傳至data
+            this.rediData.redi_index = index;
+            // 將資料傳至data
+            const rediItem = this.productData[this.rediData.redi_index];
 
-
-
-
-
-
-
-
-
+            this.rediData.title =rediItem.title;
+            this.rediData.description =rediItem.description;
+            this.rediData.id =rediItem.id;
+            this.rediData.content =rediItem.content;
+            this.rediData.category =rediItem.category;
+            this.rediData.unit =rediItem.unit;
+            this.rediData.origin_price =rediItem.origin_price;
+            this.rediData.price =rediItem.price;
+            this.rediData.is_enabled =parseInt(rediItem.is_enabled) ;
+            this.rediData.imageUrl =rediItem.imageUrl;
+            this.rediData.imagesUrl.url1 =rediItem.imagesUrl[0];
+            this.rediData.imagesUrl.url2 =rediItem.imagesUrl[1];
+            this.rediData.imagesUrl.url3 =rediItem.imagesUrl[2];
+            this.rediData.imagesUrl.url4 =rediItem.imagesUrl[3];
+            this.rediData.imagesUrl.url5 =rediItem.imagesUrl[4];
+        },
+        reditOneData(){
+            const  reditNewData = {
+                "data": {
+                    category:this.rediData.category,
+                  content:this.rediData.content,
+                  description:this.rediData.description,
+                  id:this.rediData.id,
+                  is_enabled:parseInt(this.rediData.is_enabled),
+                  origin_price:parseInt(this.rediData.origin_price),
+                  price:parseInt(this.rediData.price),
+                  title:this.rediData.title,
+                  unit:this.rediData.unit,
+                  num: 1,
+                  imageUrl:this.rediData.imageUrl,
+                  imagesUrl: [
+                    this.rediData.imagesUrl.url1,
+                    this.rediData.imagesUrl.url2,
+                    this.rediData.imagesUrl.url3,
+                    this.rediData.imagesUrl.url4,
+                    this.rediData.imagesUrl.url5
+                  ]
+                }
+              };
+              console.log(reditNewData)
+            axios.put(`${api_url}/api/${api_path}/admin/product/${this.rediData.id}`,reditNewData)
+            .then(
+                res=>{
+                    console.log(res);
+                    alert(res.data.message);
+                    //刷新
+                    this.getProduct();
+                    // 關閉編輯視窗
+                    $().ready(function() {
+                        $(".btn-close").trigger("click");
+                    })
+                   
+                }
+            ).catch(err=>{
+                console.log(err)
+                // alert(err.data.message)
+            })
+        },
 
     },
     created() {
@@ -243,4 +306,3 @@ const app = Vue.createApp({
     mounted() {
     }
 }).mount('#app');
-

@@ -16,7 +16,7 @@
 <div id="app">
   <div class="d-flex justify-content-end ">  <ul class="nav nav-pills  ">
     <li class="nav-item">
-      <a id="urUser" class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{loginName}}</a>
+      <a id="urUser" class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{userName}}</a>
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -72,7 +72,7 @@
           </tr>
         </thead>
         <tbody id="productList">
-          <tr  v-for="item in productData"class="row" :key="'prd_'+item.id">
+          <tr  v-for="(item,i) in productData"class="row" :key="'prd_'+i">
             <td  class="col-3  d-none d-md-table-cell d-flex align-items-center">
               <img class="prd_img"  :src="item.imageUrl" alt=""></td>
               <td class="col-2 d-flex align-items-center">{{item.title}}</td>
@@ -86,7 +86,7 @@
               <input class="carNum" type="number" value="1"  :id="'productNum_'+item.id">
               </td>
               <td class="col-3 col-md-2 d-flex align-items-center">
-                <button type="button" :id="'car_'+item.id"  @click="addCart"  class="btn btn-sm btn-outline-info move deleteBtn" data-action="remove" data-id="item.id"> 加入購物車 </button>
+                <button type="button" :id="'car_'+item.id"  @click="addCart"  class="btn btn-sm btn-info btn_white" data-action="remove" data-id="item.id"> 加入購物車 </button>
               </td>
             </tr>
         </tbody>

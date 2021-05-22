@@ -83,3 +83,35 @@ tbody tr:hover {
 .prd_img{
   width: 100%;
 }
+.btn_white{
+  color: #fff;
+}
+.btn-info:hover{
+  border-color: #0dcaf0;
+  background-color: #fff;
+  color: #0dcaf0;
+}
+.btn-primary:hover{
+  border-color: #0d6efd;
+  background-color: #fff;
+  color: #0d6efd;
+}
+.btn-danger:hover{
+  border-color: #dc3545;
+  background-color: #fff;
+  color: #dc3545;
+}
+.btn-left{
+  border-right: 0;
+  border-radius: 5px 0 0 5px;
+}
+.btn-right{
+  border-left: 0;
+  border-radius:  0 5px  5px 0;}
+
+  @media (min-width: 576px){
+  .modal-big {
+      max-width: 1170px;
+      margin: 1.75rem auto;
+  }
+}
