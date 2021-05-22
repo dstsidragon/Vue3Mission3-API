@@ -9,7 +9,7 @@ const vue = {
     },
     methods: {
         // 登入
-        ClickBtnForm(e){
+        ClickBtnForm(e) {
             const username = document.getElementById("username");
             const password = document.getElementById("password");
 
@@ -51,8 +51,8 @@ const vue = {
         },
 
     },
-    created() { 
-        
+    created() {
+
     }
 
 }

@@ -20,9 +20,9 @@ const app = Vue.createApp({
             //取得token
             token: document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
             // 編輯資料索引
-            rediData:{
-                redi_index:null,
-                id:"",
+            rediData: {
+                redi_index: null,
+                id: "",
                 title: "",
                 description: "",
                 content: "",
@@ -32,14 +32,15 @@ const app = Vue.createApp({
                 price: null,
                 is_enabled: 0,
                 num: 1,
-                imageUrl : "",
+                imageUrl: "",
                 imagesUrl: {
-                   url1: "",
-                   url2: "",
-                   url3: "",
-                   url4: "",
-                   url5: ""}
-                },
+                    url1: "",
+                    url2: "",
+                    url3: "",
+                    url4: "",
+                    url5: ""
+                }
+            },
         }
     },
     methods: {
@@ -155,7 +156,7 @@ const app = Vue.createApp({
         },
 
         //建立產品
-         addPrductData() {
+        addPrductData() {
             const bg_add_title = document.getElementById("bg_add_title");
             const bg_add_description = document.getElementById("bg_add_description");
             const bg_add_content = document.getElementById("bg_add_content");
@@ -170,7 +171,7 @@ const app = Vue.createApp({
             const bg_add_image4 = document.getElementById("bg_add_image4");
             const bg_add_image5 = document.getElementById("bg_add_image5");
             const bg_add_is_enabled = document.getElementById("bg_add_is_enabled");
-            
+
             const product = {
                 "data": {
                     "title": bg_add_title.value,
@@ -180,7 +181,7 @@ const app = Vue.createApp({
                     "unit": bg_add_unit.value,
                     "description": bg_add_description.value,
                     "content": bg_add_content.value,
-                    "is_enabled": (bg_add_is_enabled.checked  ? 1 :0),
+                    "is_enabled": (bg_add_is_enabled.checked ? 1 : 0),
                     "imageUrl": bg_add_image.value,
                     "imagesUrl": [
                         bg_add_image1.value,
@@ -203,7 +204,7 @@ const app = Vue.createApp({
                             this.getProduct();
 
                             // 關掉新增產品選單
-                            
+
                             document.getElementById("addProduct").classList.remove("show")
 
                             // 清空資料
@@ -214,7 +215,7 @@ const app = Vue.createApp({
                             bg_add_unit.value = "";
                             bg_add_description.value = "";
                             bg_add_content.value = "";
-                            bg_add_is_enabled.checked="false";
+                            bg_add_is_enabled.checked = "false";
 
                         }
                     )
@@ -229,7 +230,7 @@ const app = Vue.createApp({
             }
         },
         // 取得編輯商品
-        getReditOneData(e){
+        getReditOneData(e) {
             // 取得待編輯商品索引
             const index = (e.target.id).split("_")[1];
             // 將索引傳至data
@@ -237,63 +238,63 @@ const app = Vue.createApp({
             // 將資料傳至data
             const rediItem = this.productData[this.rediData.redi_index];
 
-            this.rediData.title =rediItem.title;
-            this.rediData.description =rediItem.description;
-            this.rediData.id =rediItem.id;
-            this.rediData.content =rediItem.content;
-            this.rediData.category =rediItem.category;
-            this.rediData.unit =rediItem.unit;
-            this.rediData.origin_price =rediItem.origin_price;
-            this.rediData.price =rediItem.price;
-            this.rediData.is_enabled =parseInt(rediItem.is_enabled) ;
-            this.rediData.imageUrl =rediItem.imageUrl;
-            this.rediData.imagesUrl.url1 =rediItem.imagesUrl[0];
-            this.rediData.imagesUrl.url2 =rediItem.imagesUrl[1];
-            this.rediData.imagesUrl.url3 =rediItem.imagesUrl[2];
-            this.rediData.imagesUrl.url4 =rediItem.imagesUrl[3];
-            this.rediData.imagesUrl.url5 =rediItem.imagesUrl[4];
+            this.rediData.title = rediItem.title;
+            this.rediData.description = rediItem.description;
+            this.rediData.id = rediItem.id;
+            this.rediData.content = rediItem.content;
+            this.rediData.category = rediItem.category;
+            this.rediData.unit = rediItem.unit;
+            this.rediData.origin_price = rediItem.origin_price;
+            this.rediData.price = rediItem.price;
+            this.rediData.is_enabled = parseInt(rediItem.is_enabled);
+            this.rediData.imageUrl = rediItem.imageUrl;
+            this.rediData.imagesUrl.url1 = rediItem.imagesUrl[0];
+            this.rediData.imagesUrl.url2 = rediItem.imagesUrl[1];
+            this.rediData.imagesUrl.url3 = rediItem.imagesUrl[2];
+            this.rediData.imagesUrl.url4 = rediItem.imagesUrl[3];
+            this.rediData.imagesUrl.url5 = rediItem.imagesUrl[4];
         },
-        reditOneData(){
-            const  reditNewData = {
+        reditOneData() {
+            const reditNewData = {
                 "data": {
-                    category:this.rediData.category,
-                  content:this.rediData.content,
-                  description:this.rediData.description,
-                  id:this.rediData.id,
-                  is_enabled:parseInt(this.rediData.is_enabled),
-                  origin_price:parseInt(this.rediData.origin_price),
-                  price:parseInt(this.rediData.price),
-                  title:this.rediData.title,
-                  unit:this.rediData.unit,
-                  num: 1,
-                  imageUrl:this.rediData.imageUrl,
-                  imagesUrl: [
-                    this.rediData.imagesUrl.url1,
-                    this.rediData.imagesUrl.url2,
-                    this.rediData.imagesUrl.url3,
-                    this.rediData.imagesUrl.url4,
-                    this.rediData.imagesUrl.url5
-                  ]
+                    category: this.rediData.category,
+                    content: this.rediData.content,
+                    description: this.rediData.description,
+                    id: this.rediData.id,
+                    is_enabled: parseInt(this.rediData.is_enabled),
+                    origin_price: parseInt(this.rediData.origin_price),
+                    price: parseInt(this.rediData.price),
+                    title: this.rediData.title,
+                    unit: this.rediData.unit,
+                    num: 1,
+                    imageUrl: this.rediData.imageUrl,
+                    imagesUrl: [
+                        this.rediData.imagesUrl.url1,
+                        this.rediData.imagesUrl.url2,
+                        this.rediData.imagesUrl.url3,
+                        this.rediData.imagesUrl.url4,
+                        this.rediData.imagesUrl.url5
+                    ]
                 }
-              };
-              console.log(reditNewData)
-            axios.put(`${api_url}/api/${api_path}/admin/product/${this.rediData.id}`,reditNewData)
-            .then(
-                res=>{
-                    console.log(res);
-                    alert(res.data.message);
-                    //刷新
-                    this.getProduct();
-                    // 關閉編輯視窗
-                    $().ready(function() {
-                        $(".btn-close").trigger("click");
-                    })
-                   
-                }
-            ).catch(err=>{
-                console.log(err)
-                // alert(err.data.message)
-            })
+            };
+            //   console.log(reditNewData)
+            axios.put(`${api_url}/api/${api_path}/admin/product/${this.rediData.id}`, reditNewData)
+                .then(
+                    res => {
+                        // console.log(res);
+                        alert(res.data.message);
+                        //刷新
+                        this.getProduct();
+                        // 關閉編輯視窗
+                        $().ready(function () {
+                            $(".btn-close").trigger("click");
+                        })
+
+                    }
+                ).catch(err => {
+                    console.log(err)
+                    // alert(err.data.message)
+                })
         },
 
     },

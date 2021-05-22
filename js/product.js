@@ -34,7 +34,7 @@ const app = Vue.createApp({
             axios.get(`${api_url}/api/${api_path}/products`)
                 .then(
                     res => {
-                        console.log(res);
+                        // console.log(res);
                         if (res.data.success) {
                             this.productData = res.data.products;
 
