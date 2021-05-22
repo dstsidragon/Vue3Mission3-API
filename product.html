@@ -72,7 +72,23 @@
           </tr>
         </thead>
         <tbody id="productList">
-          
+          <tr  v-for="item in productData"class="row" :key="'prd_'+item.id">
+            <td  class="col-3  d-none d-md-table-cell d-flex align-items-center">
+              <img class="prd_img"  :src="item.imageUrl" alt=""></td>
+              <td class="col-2 d-flex align-items-center">{{item.title}}</td>
+              <td  class="col-2 d-flex align-items-center">
+                {{item.origin_price}}
+              </td>
+              <td class="col-2 col-md-1 d-flex align-items-center">
+                {{item.price}}
+              </td>
+              <td  class="col-3 col-md-2  d-flex align-items-center">
+              <input class="carNum" type="number" value="1"  :id="'productNum_'+item.id">
+              </td>
+              <td class="col-3 col-md-2 d-flex align-items-center">
+                <button type="button" :id="'car_'+item.id"  @click="addCart"  class="btn btn-sm btn-outline-info move deleteBtn" data-action="remove" data-id="item.id"> 加入購物車 </button>
+              </td>
+            </tr>
         </tbody>
       </table>
       <p>目前有{{dataLength}}項產品</p>
