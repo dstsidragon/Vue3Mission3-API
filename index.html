@@ -10,15 +10,18 @@
     integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/utily.css">
+    <script src="https://unpkg.com/vue@next"></script>
 </head>
 
 <body>
+  <!-- https://dstsidragon.github.io/Vue3Mission3-API/ -->
+  
   <div class="wrap">
-    <div id="app ">
+    <div id="app">
       <div class="container position-absolute top-50 start-50 translate-middle div_shadow ">
        <div class="row justify-content-center p-2" >
          <h1 class="h1 mb-3 font-weight-normal text-center  fw-bold text-primary fst-italic ">
-           請先登入
+           {{h1}}
          </h1>
          <div class="col-8">
            <form id="form" class="form-signin">
@@ -30,14 +33,14 @@
                <input type="password" class="form-control" id="password" placeholder="Password" required>
                <label for="password">Password</label>
              </div>
-             <button class="btn btn-lg btn-primary w-100 mt-3" id="btn-form" type="submit">
+             <button class="btn btn-lg btn-primary w-100 mt-3" id="btn-form" @click.prevent="ClickBtnForm" type="submit">
                登入
              </button>
            </form>
          </div>
        </div>
        <p class="mt-5 pb-3 text-muted text-center">
-         &copy; 2021~∞ - 六角學院
+         &copy; {{footer}}
        </p>
      </div>
      </div>
