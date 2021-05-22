@@ -1,0 +1,15 @@
+/* 推擠 */
+.mt_5p{
+    margin-top: 5% !important;
+}
+
+
+/* 區塊陰影 */
+.div_shadow
+{
+box-shadow: -8px -5px 25px #333333;
+-webkit-box-shadow: -8px -5px 25px #333333;
+-moz-box-shadow: -8px -5px 25px #333333;
+}
+
+
