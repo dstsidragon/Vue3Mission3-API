@@ -15,6 +15,8 @@ const app = Vue.createApp({
             },
             // 使用者名稱
             userName:document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
+            //取得token
+         token :document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
         }
     },
     methods: {
@@ -39,16 +41,14 @@ const app = Vue.createApp({
     axios.get(`${api_url}/api/${api_path}/admin/products`)
     .then(
         res=>{
-            console.log(res);
+            // console.log(res);
             // console.log(res.data.success);
             if(res.data.success){
             this.productData = res.data.products;
             // console.log(productData);
             this.render();
         }else{
-            alert('驗證錯誤，請重新登入!');
-            console.log(btnVerification);
-            btnVerification.innerHTML="未驗證";
+            alert(res.data.message);
             // window.location="index.html";
         }
         }
@@ -108,16 +108,16 @@ const app = Vue.createApp({
 //刪除單一資料
  delOneData(e){
     const delId=e.target.dataset.id;
-    console.log(delId);
+    // console.log(delId);
     axios.delete(`${api_url}/api/${api_path}/admin/product/${delId}`)
     .then(
         res=>{
-            console.log(res);
+            // console.log(res);
             if(res.data.success){
                 alert(`${res.data.message}`);
                 this.getProduct();
     }else{
-        alert('錯誤，請檢查產品編號!')
+        alert(`${res.data.message}`);
     }
         }
     ).catch(
@@ -130,8 +130,7 @@ const app = Vue.createApp({
 //驗證
  chkPath (){
     api_path = API_Path.value;
-    console.log(api_path);
-    getProduct();
+    this.getProduct();
 },
 
 //啟用/未啟用事件
@@ -150,6 +149,7 @@ const app = Vue.createApp({
     .then(
         res=>{
             // console.log(res)
+            alert(`${res.data.message}`);
             this.getProduct();
         }
     ).catch(
@@ -165,12 +165,6 @@ const app = Vue.createApp({
 //建立產品
 
  addPrductData  (){
-    const bg_image  = document.getElementById("bg_image");
-    const bg_image1  = document.getElementById("bg_image1");
-    const bg_image2  = document.getElementById("bg_image2");
-    const bg_image3  = document.getElementById("bg_image3");
-    const bg_image4  = document.getElementById("bg_image4");
-    const bg_image5  = document.getElementById("bg_image5");
     const bg_add_title  = document.getElementById("bg_add_title");
     const bg_add_description  = document.getElementById("bg_add_description");
     const bg_add_content  = document.getElementById("bg_add_content");
@@ -185,29 +179,47 @@ const app = Vue.createApp({
     const bg_add_image4  = document.getElementById("bg_add_image4");
     const bg_add_image5  = document.getElementById("bg_add_image5");
     const bg_add_is_enabled  = document.getElementById("bg_add_is_enabled");
-
+    const product = {
+        "data": {
+          "title": bg_add_title.value, 
+          "category": bg_add_category.value,
+          "origin_price":bg_add_origin_price.value,
+          "price": bg_add_price.value,
+          "unit": bg_add_unit.value,
+          "description": bg_add_description.value,
+          "content": bg_add_content.value,
+          "is_enabled": (bg_add_is_enabled.value=="on"?"1":"0"),
+          "imageUrl" :bg_add_image.value,
+          "imagesUrl": [
+            bg_add_image1.value,
+            bg_add_image2.value,
+            bg_add_image3.value,
+            bg_add_image4.value,
+            bg_add_image5.value
+          ]
+        }
+      };
     if(bg_add_title.value!==""&&bg_add_category.value!==""
     &&bg_add_unit.value!==""&&bg_add_origin_price.value!==""
     &&bg_add_price.value!==""){
-        console.log(1);
-        
+        //   console.log(product)
         axios.post(`${api_url}/api/${API_Path}/admin/product`, {
             "data": {
-              "title": bg_add_title.value, 
-              "category": bg_add_category.value,
-              "origin_price":bg_add_origin_price.value,
-              "price": bg_add_price.value,
-              "unit": bg_add_unit.value,
-              "description": bg_add_description.value,
-              "content": bg_add_content.value,
-              "is_enabled": bg_add_is_enabled.value,
-              "imageUrl" :bg_add_image.value,
+              "title": "[賣]動物園造型衣服3", 
+              "category": "衣服2",
+              "origin_price": 100,
+              "price": 300,
+              "unit": "個",
+              "description": "Sit down please 名設計師設計",
+              "content": "這是內容",
+              "is_enabled": 1,
+              "imageUrl" : "主圖網址",
               "imagesUrl": [
-                bg_add_image1.value,
-                bg_add_image2.value,
-                bg_add_image3.value,
-                bg_add_image4.value,
-                bg_add_image5.value
+                "圖片網址一",
+                "圖片網址二",
+                "圖片網址三",
+                "圖片網址四",
+                "圖片網址五"
               ]
             }
           })
@@ -239,10 +251,14 @@ const app = Vue.createApp({
     },
     created() { 
          //取得token
-         const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-         axios.defaults.headers.common['Authorization'] = token;
+        //  const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+         axios.defaults.headers.common['Authorization'] = this.token;
+        
         //取得商品資料
     this.getProduct();
+    },
+    mounted(){
+        
     }
 }).mount('#app');
 
