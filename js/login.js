@@ -38,7 +38,7 @@ const vue = {
                                 document.cookie = `username=${(username.value).split("@")[0]}; expires=${new Date(expired)};`;
 
                                 //跳轉畫面
-                                window.location = "index.html";
+                                window.location = "background.html";
                             } else {
                                 alert(`${res.data.message}!!請檢查帳號密碼!`);
                                 //密碼錯誤 清空密碼

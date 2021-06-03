@@ -4,7 +4,9 @@ const app = Vue.createApp({
             //產品資料
             productData: [],
             // 使用者名稱
-            userName: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
+            userName: "訪客",
+            //登入/登出鈕
+            login_status: false,
             //取得token
             token: document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
             //資料筆數
@@ -36,14 +38,27 @@ const app = Vue.createApp({
                 )
         },
         //刪除cookie
-         deleteAllCookies() {
+        deleteAllCookies() {
             let cookies = document.cookie.split(";");
-        
+
             for (let i = 0; i < cookies.length; i++) {
                 let cookie = cookies[i];
                 let eqPos = cookie.indexOf("=");
                 let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
                 document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+        },
+        //判斷使用者值
+        chkUserName() {
+            // 如果有取到值 ，代表已登入
+            if (document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1") !== "") {
+                this.userName = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+                // 登入狀態
+                this.login_status =  true;
+            }else{
+                this.userName = "訪客";
+                // 登入狀態
+                this.login_status =  false;
             }
         },
         //取得商品列表
@@ -80,7 +95,8 @@ const app = Vue.createApp({
     created() {
         // 使用token驗證
         axios.defaults.headers.common['Authorization'] = this.token;
-
+        //判斷使用者值
+        this.chkUserName();
         // 取得商品
         this.getProduct();
     }

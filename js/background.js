@@ -7,9 +7,10 @@ const app = Vue.createApp({
             productData: [],
             // 商品資料筆數
             dataLength: 0,
-
             // 使用者名稱
-            userName: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
+            userName: "訪客",
+            //登入/登出鈕
+            login_status: false,
             //取得token
             token: document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
             // 編輯資料索引
@@ -45,13 +46,13 @@ const app = Vue.createApp({
                 bg_add_origin_price: "",
                 bg_add_price: "",
                 bg_add_is_enabled: false,
-                imageUrl: "https://images.unsplash.com/photo-1516550135131-fe3dcb0bedc7?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=621e8231a4e714c2e85f5acbbcc6a730&auto=format&fit=crop&w=1352&q=80",
+                imageUrl: "https://tse3.mm.bing.net/th?id=OIP.nS40nYJJP_xB8UJzs-uiOwAAAA&pid=Api&P=0&w=300&h=300",
                 imageUrls: {
-                    url1: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1924&q=80",
-                    url2: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
-                    url3: "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1948&amp;q=80",
-                    url4: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80",
-                    url5: "https://images.unsplash.com/photo-1511914265872-c40672604a80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1867&amp;q=80",
+                    url1: "https://tse1.mm.bing.net/th?id=OIP.f19u7Min0Syi7UxVaWEpSAHaNK&pid=Api&P=0&w=300&h=300",
+                    url2: "https://tse4.mm.bing.net/th?id=OIP.UsIbhrQNkeE2W_AaCbHtfgHaD5&pid=Api&P=0&w=327&h=173",
+                    url3: "https://tse3.mm.bing.net/th?id=OIP._jO8Zpb6mfLi_BDgmY5QGgHaNK&pid=Api&P=0&w=300&h=300",
+                    url4: "https://tse2.mm.bing.net/th?id=OIP.nK8BdFb8oZMFpAFsogSOGAAAAA&pid=Api&P=0&w=300&h=300",
+                    url5: "https://tse4.mm.bing.net/th?id=OIP.biQM95mT36fG4rnYO1xM1QHaLH&pid=Api&P=0&w=300&h=300",
                 },
             }
         }
@@ -89,6 +90,20 @@ const app = Vue.createApp({
                 let eqPos = cookie.indexOf("=");
                 let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
                 document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+        },
+        
+        //判斷使用者值
+        chkUserName() {
+            // 如果有取到值 ，代表已登入
+            if (document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1") !== "") {
+                this.userName = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+                // 登入狀態
+                this.login_status =  true;
+            }else{
+                this.userName = "訪客";
+                // 登入狀態
+                this.login_status =  false;
             }
         },
         //取得商品列表
@@ -204,7 +219,7 @@ const app = Vue.createApp({
                     ]
                 }
             };
-            console.log(product);
+            // console.log(product);
             //判斷是否都不為空值
             if (this.addProduct.bg_add_title !== "" && this.addProduct.bg_add_category !== ""
                 && this.addProduct.bg_add_unit !== "" && this.addProduct.bg_add_origin_price !== ""
@@ -327,6 +342,8 @@ const app = Vue.createApp({
     created() {
         // 使用token驗證
         axios.defaults.headers.common['Authorization'] = this.token;
+        //判斷使用者值
+        this.chkUserName();
         //取得商品資料
         this.getProduct();
     },

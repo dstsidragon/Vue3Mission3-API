@@ -31,9 +31,12 @@
           </ul>
         </li>
         <li class="nav-item">
-          <button id="chkSignOut" type="button" class="btn " data-bs-toggle="modal" data-bs-target="#signOutUser">
+          <a v-if="login_status" id="chkSignOut"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#signOutUser">
             登出
-          </button>
+          </a>
+          <a v-else  id="chkSignOut"  class="btn btn-success " href="login.html">
+            登入
+          </a>
         </li>
       </ul>
     </div>
