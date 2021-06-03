@@ -5,8 +5,8 @@ const vue = {
         return {
             h1: "請先登入",
             footer: "2021~∞ - 六角學院",
-            username:"sim322on@yahoo.com.tw",
-            password:"a123456",
+            username:"",
+            password:"",
         }
     },
     methods: {
