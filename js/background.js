@@ -7,14 +7,7 @@ const app = Vue.createApp({
             productData: [],
             // 商品資料筆數
             dataLength: 0,
-            imageUrl: "https://images.unsplash.com/photo-1516550135131-fe3dcb0bedc7?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=621e8231a4e714c2e85f5acbbcc6a730&auto=format&fit=crop&w=1352&q=80",
-            imageUrls: {
-                url1: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1924&q=80",
-                url2: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
-                url3: "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1948&amp;q=80",
-                url4: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80",
-                url5: "https://images.unsplash.com/photo-1511914265872-c40672604a80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1867&amp;q=80",
-            },
+
             // 使用者名稱
             userName: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
             //取得token
@@ -41,6 +34,26 @@ const app = Vue.createApp({
                     url5: ""
                 }
             },
+            //新增產品
+            addProduct: {
+                bg_add_title: "",
+                bg_add_description: "",
+                //分類
+                bg_add_content: "",
+                bg_add_category: "",
+                bg_add_unit: "",
+                bg_add_origin_price: "",
+                bg_add_price: "",
+                bg_add_is_enabled: false,
+                imageUrl: "https://images.unsplash.com/photo-1516550135131-fe3dcb0bedc7?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=621e8231a4e714c2e85f5acbbcc6a730&auto=format&fit=crop&w=1352&q=80",
+                imageUrls: {
+                    url1: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1924&q=80",
+                    url2: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+                    url3: "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1948&amp;q=80",
+                    url4: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80",
+                    url5: "https://images.unsplash.com/photo-1511914265872-c40672604a80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1867&amp;q=80",
+                },
+            }
         }
     },
     methods: {
@@ -50,15 +63,33 @@ const app = Vue.createApp({
                 .then(
                     res => {
                         // console.log(res);
+                        //如果成功就執行
                         if (res.data.success) {
                             alert(res.data.message);
-                            window.location = "index.html";
+
+                            //刪除cookie
+                            this.deleteAllCookies();
+                            //跳轉頁面
+                            window.location = "login.html";
                         } else {
                             alert("未知的錯誤!");
-                            window.location = "product.html";
+
+                            //跳轉頁面
+                            window.location = "login.html";
                         }
                     }
                 )
+        },
+        //刪除cookie
+         deleteAllCookies() {
+            let cookies = document.cookie.split(";");
+        
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i];
+                let eqPos = cookie.indexOf("=");
+                let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
         },
         //取得商品列表
         getProduct() {
@@ -67,9 +98,12 @@ const app = Vue.createApp({
                     res => {
                         // console.log(res);
                         // console.log(res.data.success);
+
+                        //如果成功就執行
                         if (res.data.success) {
                             this.productData = res.data.products;
                             // console.log(productData);
+
                             // 更新筆數
                             this.dataLength = this.productData.length;
                         } else {
@@ -92,6 +126,8 @@ const app = Vue.createApp({
                 .then(
                     res => {
                         // console.log(res);
+
+                        //如果成功就執行
                         if (res.data.success) {
                             alert(`${res.data.message}`);
                             this.getProduct();
@@ -115,38 +151,27 @@ const app = Vue.createApp({
         //啟用/未啟用事件
         productEnable(e) {
             const delId = e.target.dataset.id;
-            axios.put(`${api_url}/api/${api_path}/admin/product/${delId}`, {
-                "data": {
-                    "category": `${e.target.dataset.category}`,
-                    "is_enabled": e.target.dataset.is_enabled == 1 ? 0 : 1,
-                    "origin_price": parseInt(e.target.dataset.origin_price),
-                    "price": parseInt(e.target.dataset.price),
-                    "title": `${e.target.dataset.title}`,
-                    "unit": `${e.target.dataset.unit}`,
 
-                    // "title": bg_add_title.value,
-                    // "category": bg_add_category.value,
-                    // "origin_price": parseInt(bg_add_origin_price.value),
-                    // "price": parseInt(bg_add_price.value),
-                    // "unit": bg_add_unit.value,
-                    // "description": bg_add_description.value,
-                    // "content": bg_add_content.value,
-                    // "is_enabled": (bg_add_is_enabled.value == "on" ? "1" : "0"),
-                    // "imageUrl": bg_add_image.value,
-                    // "imagesUrl": [
-                    //     bg_add_image1.value,
-                    //     bg_add_image2.value,
-                    //     bg_add_image3.value,
-                    //     bg_add_image4.value,
-                    //     bg_add_image5.value
-                    // ]
+            axios.put(`${api_url}/api/${api_path}/admin/product/${delId}`, {
+                data: {
+                    category: `${e.target.dataset.category}`,
+                    is_enabled: e.target.dataset.is_enabled == 1 ? 0 : 1,
+                    origin_price: parseInt(e.target.dataset.origin_price),
+                    price: parseInt(e.target.dataset.price),
+                    title: `${e.target.dataset.title}`,
+                    unit: `${e.target.dataset.unit}`,
+
+
                 }
             })
                 .then(
                     res => {
                         // console.log(res)
-                        alert("已變更啟用狀態!");
-                        this.getProduct();
+                        //如果成功就執行
+                        if (res.data.success) {
+                            alert("已變更啟用狀態!");
+                            this.getProduct();
+                        }
                     }
                 ).catch(
                     err => {
@@ -157,65 +182,61 @@ const app = Vue.createApp({
 
         //建立產品
         addPrductData() {
-            const bg_add_title = document.getElementById("bg_add_title");
-            const bg_add_description = document.getElementById("bg_add_description");
-            const bg_add_content = document.getElementById("bg_add_content");
-            const bg_add_category = document.getElementById("bg_add_category");
-            const bg_add_unit = document.getElementById("bg_add_unit");
-            const bg_add_origin_price = document.getElementById("bg_add_origin_price");
-            const bg_add_price = document.getElementById("bg_add_price");
-            const bg_add_image = document.getElementById("bg_add_image");
-            const bg_add_image1 = document.getElementById("bg_add_image1");
-            const bg_add_image2 = document.getElementById("bg_add_image2");
-            const bg_add_image3 = document.getElementById("bg_add_image3");
-            const bg_add_image4 = document.getElementById("bg_add_image4");
-            const bg_add_image5 = document.getElementById("bg_add_image5");
-            const bg_add_is_enabled = document.getElementById("bg_add_is_enabled");
 
+            //新增的產品資料
             const product = {
-                "data": {
-                    "title": bg_add_title.value,
-                    "category": bg_add_category.value,
-                    "origin_price": parseInt(bg_add_origin_price.value),
-                    "price": parseInt(bg_add_price.value),
-                    "unit": bg_add_unit.value,
-                    "description": bg_add_description.value,
-                    "content": bg_add_content.value,
-                    "is_enabled": (bg_add_is_enabled.checked ? 1 : 0),
-                    "imageUrl": bg_add_image.value,
-                    "imagesUrl": [
-                        bg_add_image1.value,
-                        bg_add_image2.value,
-                        bg_add_image3.value,
-                        bg_add_image4.value,
-                        bg_add_image5.value
+                data: {
+                    title: this.addProduct.bg_add_title,
+                    category: this.addProduct.bg_add_category,
+                    origin_price: parseInt(this.addProduct.bg_add_origin_price),
+                    price: parseInt(this.addProduct.bg_add_price),
+                    unit: this.addProduct.bg_add_unit,
+                    description: this.addProduct.bg_add_description,
+                    content: this.addProduct.bg_add_content,
+                    is_enabled: (this.addProduct.bg_add_is_enabled),
+                    imageUrl: this.addProduct.imageUrl,
+                    imagesUrl: [
+                        this.addProduct.imageUrls.url1,
+                        this.addProduct.imageUrls.url2,
+                        this.addProduct.imageUrls.url3,
+                        this.addProduct.imageUrls.url4,
+                        this.addProduct.imageUrls.url5,
                     ]
                 }
             };
-            if (bg_add_title.value !== "" && bg_add_category.value !== ""
-                && bg_add_unit.value !== "" && bg_add_origin_price.value !== ""
-                && bg_add_price.value !== "") {
+            console.log(product);
+            //判斷是否都不為空值
+            if (this.addProduct.bg_add_title !== "" && this.addProduct.bg_add_category !== ""
+                && this.addProduct.bg_add_unit !== "" && this.addProduct.bg_add_origin_price !== ""
+                && this.addProduct.bg_add_price !== "") {
                 //   console.log(API_Path)
+
+                //送至伺服器
                 axios.post(`${api_url}/api/${api_path}/admin/product`, product)
                     .then(
                         res => {
+
                             alert(res.data.message);
-                            // 刷新
-                            this.getProduct();
+                            //如果成功就執行
+                            if (res.data.success) {
+                                // 刷新
+                                this.getProduct();
 
-                            // 關掉新增產品選單
+                                // 關掉新增產品選單
 
-                            document.getElementById("addProduct").classList.remove("show")
+                                document.getElementById("addProduct").classList.remove("show")
 
-                            // 清空資料
-                            bg_add_title.value = "";
-                            bg_add_category.value = "";
-                            bg_add_origin_price.value = "";
-                            bg_add_price.value = "";
-                            bg_add_unit.value = "";
-                            bg_add_description.value = "";
-                            bg_add_content.value = "";
-                            bg_add_is_enabled.checked = "false";
+                                // 清空資料
+                                this.addProduct.bg_add_title = "";
+                                this.addProduct.bg_add_category = "";
+                                this.addProduct.bg_add_origin_price = "";
+                                this.addProduct.bg_add_price = "";
+                                this.addProduct.bg_add_unit = "";
+                                this.addProduct.bg_add_description = "";
+                                this.addProduct.bg_add_content = "";
+                                this.addProduct.bg_add_is_enabled = false;
+
+                            }
 
                         }
                     )
@@ -237,7 +258,6 @@ const app = Vue.createApp({
             this.rediData.redi_index = index;
             // 將資料傳至data
             const rediItem = this.productData[this.rediData.redi_index];
-
             this.rediData.title = rediItem.title;
             this.rediData.description = rediItem.description;
             this.rediData.id = rediItem.id;
@@ -254,9 +274,10 @@ const app = Vue.createApp({
             this.rediData.imagesUrl.url4 = rediItem.imagesUrl[3];
             this.rediData.imagesUrl.url5 = rediItem.imagesUrl[4];
         },
+        //編輯商品
         reditOneData() {
             const reditNewData = {
-                "data": {
+                data: {
                     category: this.rediData.category,
                     content: this.rediData.content,
                     description: this.rediData.description,
@@ -278,17 +299,22 @@ const app = Vue.createApp({
                 }
             };
             //   console.log(reditNewData)
+            //編輯資料
             axios.put(`${api_url}/api/${api_path}/admin/product/${this.rediData.id}`, reditNewData)
                 .then(
                     res => {
                         // console.log(res);
                         alert(res.data.message);
-                        //刷新
-                        this.getProduct();
-                        // 關閉編輯視窗
-                        $().ready(function () {
-                            $(".btn-close").trigger("click");
-                        })
+                        //如果成功就執行
+                        if (res.data.success) {
+                            //刷新
+                            this.getProduct();
+                            // 關閉編輯視窗
+                            $().ready(function () {
+                                $(".btn-close").trigger("click");
+                            })
+                        }
+
 
                     }
                 ).catch(err => {

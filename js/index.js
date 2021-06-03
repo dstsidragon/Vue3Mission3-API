@@ -1,60 +1,87 @@
-
-
-const vue = {
+const app = Vue.createApp({
     data() {
         return {
-            h1: "請先登入",
-            footer: "2021~∞ - 六角學院",
+            //產品資料
+            productData: [],
+            // 使用者名稱
+            userName: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
+            //取得token
+            token: document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
+            //資料筆數
+            dataLength: 0,
         }
     },
     methods: {
-        // 登入
-        ClickBtnForm(e) {
-            const username = document.getElementById("username");
-            const password = document.getElementById("password");
+        // 登出
+        signOutAdmin(e) {
+            axios.post(`${api_url}/logout`)
+                .then(
+                    res => {
+                        // console.log(res);
+                        //如果成功就執行
+                        if (res.data.success) {
+                            alert(res.data.message);
 
-            //信箱驗證
-            const myreg = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-            const adminInfo = {
-                username: username.value,
-                password: password.value
-            }
-            if (username.value != "" && myreg.test(username.value) && password.value != "") {
-                axios.post(`${api_url}/admin/signin`, adminInfo)
-                    .then(
-                        res => {
-                            // console.log(res);
+                            //刪除cookie
+                            this.deleteAllCookies();
+                            //跳轉頁面
+                            window.location = "login.html";
+                        } else {
+                            alert("未知的錯誤!");
 
-                            if (res.data.success) {
-                                alert(`${res.data.message}!!`);
-                                const expired = res.data.expired;
-                                const token = res.data.token;
-                                // 存到cookies
-                                document.cookie = `hexToken=${token}; expires=${new Date(expired)};username=${username.value}`;
-                                document.cookie = `username=${(username.value).split("@")[0]}; expires=${new Date(expired)};`;
-
-                                window.location = "product.html";
-                            } else {
-                                alert(`${res.data.message}!!請檢查帳號密碼!`);
-                                password.value = "";
-                            }
+                            //跳轉頁面
+                            window.location = "login.html";
                         }
-                    ).catch(err => {
-                        console.dir(err)
-                    })
-            } else {
-                alert("帳號密碼錯誤!");
-                username.value = "";
-                password.value = "";
+                    }
+                )
+        },
+        //刪除cookie
+         deleteAllCookies() {
+            let cookies = document.cookie.split(";");
+        
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i];
+                let eqPos = cookie.indexOf("=");
+                let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
             }
+        },
+        //取得商品列表
+        getProduct() {
+            axios.get(`${api_url}/api/${api_path}/products`)
+                .then(
+                    res => {
+                        // console.log(res);
+                        //如果成功就執行
+                        if (res.data.success) {
+                            this.productData = res.data.products;
 
+                            //將資料筆數更新
+                            this.dataLength = this.productData.length;
+                        } else {
+                            alert('驗證錯誤，請重新登入!');
+
+                            //跳轉頁面
+                            window.location = "login.html";
+                        }
+                    }
+                ).catch(
+                    err => {
+                        console.log(err);
+                    }
+                )
+        },
+        //加入購物車
+        addCart() {
+            alert("先不要點啦~ 我還沒做，晚點補上QQ");
         },
 
     },
     created() {
+        // 使用token驗證
+        axios.defaults.headers.common['Authorization'] = this.token;
 
+        // 取得商品
+        this.getProduct();
     }
-
-}
-Vue.createApp(vue)
-    .mount("#app");
+}).mount("#app");
